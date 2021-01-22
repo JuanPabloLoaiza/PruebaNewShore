@@ -48,6 +48,7 @@ export default {
   },
   methods: {
     async Houses(house) {
+      this.$store.state.members = [];
       this.houseName = house;
       let data = await axios.get(
         `http://hp-api.herokuapp.com/api/characters/house/${this.houseName}`
