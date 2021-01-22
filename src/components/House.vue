@@ -14,16 +14,11 @@
         <b-button variant="outline-primary" @click="sortName()">nombre</b-button>
       </b-col>
       <b-col cols="1">
-        <b-button variant="outline-primary">apellido</b-button>
+        <b-button variant="outline-primary" @click="sortLastName()">apellido</b-button>
       </b-col>
     </b-row>
-    <b-row class="mt-5" v-if="members.length === 0">
-      <b-col
-        cols="3"
-        v-for="data in $store.state.houseStudents"
-        :key="data.name"
-        class="mt-3"
-      >
+    <b-row class="mt-5" v-if="findCharacter === '' && index === 0">
+      <b-col cols="3" v-for="data in $store.state.houseStudents" :key="data.name" class="mt-3">
         <b-card tag="article" class="mb-3" style="max-width: 20rem;">
           <b-card-title class="titulos">{{ data.name }}</b-card-title>
           <img :src="data.image" class="imagenes" />
@@ -31,8 +26,16 @@
         </b-card>
       </b-col>
     </b-row>
-
-    <b-row class="mt-5" v-else>
+    <b-row class="mt-5" v-else-if="findCharacter !== '' && index === 0">
+      <b-col cols="3" v-for="data in members" :key="data.name" class="mt-3">
+        <b-card tag="article" class="mb-3" style="max-width: 20rem;">
+          <b-card-title class="titulos">{{ data.name }}</b-card-title>
+          <img :src="data.image" class="imagenes" />
+          <b-card-text class="mt-3">Hola, soy {{ data.name }} </b-card-text>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-row class="mt-5" v-else-if="findCharacter === '' && index === 1">
       <b-col cols="3" v-for="data in members" :key="data.name" class="mt-3">
         <b-card tag="article" class="mb-3" style="max-width: 20rem;">
           <b-card-title class="titulos">{{ data.name }}</b-card-title>
@@ -52,6 +55,7 @@ export default {
     return {
       findCharacter: "",
       members: [],
+      index: 0
     };
   },
   props: {
@@ -59,6 +63,7 @@ export default {
   },
   watch: {
     findCharacter(value) {
+      this.index = 0;
       let names = [];
       let lastNames = [];
       let count = 0;
@@ -82,6 +87,7 @@ export default {
   },
   methods: {
     sortName() {
+      this.index = 1;
       let names = [];
       this.members = [];
       this.$store.state.houseStudents.map((data) => {
@@ -91,16 +97,38 @@ export default {
       names.sort();
       names.map((data => {
         for (let index = 0; index < this.$store.state.houseStudents.length; index++) {
-          console.log("Entra");
           let firstName = this.$store.state.houseStudents[index].name.split(" ");
-          if (firstName === data) {
-            console.log("Entra al if");
-            members[index] = this.$store.state.houseStudents[index];
+          if (firstName[0] === data) {
+            this.members.push(this.$store.state.houseStudents[index]);
             break;
           }       
         }
       }))
-      console.log(names);
+    },
+    sortLastName() {
+      this.index = 1;
+      let lastNames = [];
+      let students = [];
+      this.members = [];
+      this.$store.state.houseStudents.map((data) => {
+        let name = data.name.split(" ");
+        lastNames.push(name[1]);
+        students.push(data);
+      });
+      lastNames.sort();
+      console.log(lastNames);
+      lastNames.map((data) => {
+        for (let index = 0; index < students.length; index++) {
+          let name = students[index].name.split(" ");
+          //console.log(name[1] + "  " + data + "   " + name[0] + "   " + names[index]);
+          if (name[1] === data) {
+            this.members.push(students[index]);
+            //console.log(data + " " + index);
+            students.splice(index, 1);
+            break;
+          }
+        }
+      });
     }
   }
 };
