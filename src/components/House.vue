@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <b-row class="mt-5">
       <b-col cols="3">
         <b-form-input
@@ -7,31 +7,47 @@
           placeholder="Buscar"
         ></b-form-input>
       </b-col>
-      <b-col cols="2" align-self="end">
+      <b-col cols="3" lg="1" align-self="end">
         <p>Ordenar por: </p>
       </b-col>
-      <b-col cols="1">
+      <b-col cols="3" lg="1">
         <b-button variant="outline-primary" @click="sortName()">nombre</b-button>
       </b-col>
-      <b-col cols="1">
+      <b-col cols="3" lg="1">
         <b-button variant="outline-primary" @click="sortLastName()">apellido</b-button>
       </b-col>
     </b-row>
     <b-row class="mt-5" v-if="findCharacter === '' && $store.state.members.length === 0">
-      <b-col cols="3" v-for="data in $store.state.houseStudents" :key="data.name" class="mt-3">
-        <b-card tag="article" class="mb-3" style="max-width: 20rem;">
-          <b-card-title class="titulos">{{ data.name }}</b-card-title>
-          <img :src="data.image" class="imagenes" />
-          <b-card-text class="mt-3">Hola, soy {{ data.name }} </b-card-text>
+      <b-col cols="6" lg="3" v-for="data in $store.state.houseStudents" :key="data.name" class="mt-3">
+        <b-card bg-variant="secondary" tag="article" class="mb-3" style="max-width: 20rem;">
+          <b-card-title class="titles">{{ data.name }}</b-card-title>
+          <img :src="data.image" class="imagesCharacter" style="margin-bottom: 5px"/>
+          <b-card-text class="titleCards">Nombre: {{ data.name }} </b-card-text>
+          <b-card-text class="titleCards">Especie: {{ data.species }} </b-card-text>
+          <b-card-text class="titleCards">Año de nacimiento: {{ data.yearOfBirth }} </b-card-text>
+          <b-card-text class="titleCards">Tipo de sangre:
+            <img src="../assets/Images/pure-blood.png" class="imagesBlood" v-if="data.ancestry === 'pure-blood'"/>
+            <img src="../assets/Images/half-blood.png" class="imagesBlood" v-else-if="data.ancestry === 'half-blood'"/>
+            <img src="../assets/Images/muggleborn.png" class="imagesBlood" v-else-if="data.ancestry === 'muggleborn'"/>
+            <img src="../assets/Images/squib.png" class="imagesBlood" v-else />
+          </b-card-text>        
         </b-card>
       </b-col>
     </b-row>
     <b-row class="mt-5" v-else-if="findCharacter !== '' || $store.state.members.length > 0">
-      <b-col cols="3" v-for="data in $store.state.members" :key="data.name" class="mt-3">
-        <b-card tag="article" class="mb-3" style="max-width: 20rem;">
-          <b-card-title class="titulos">{{ data.name }}</b-card-title>
-          <img :src="data.image" class="imagenes" />
-          <b-card-text class="mt-3">Hola, soy {{ data.name }} </b-card-text>
+      <b-col cols="6" lg="3" v-for="data in $store.state.members" :key="data.name" class="mt-3">
+        <b-card bg-variant="secondary" tag="article" class="mb-3" style="max-width: 20rem;">
+          <b-card-title class="titles">{{ data.name }}</b-card-title>
+          <img :src="data.image" class="imagesCharacter" style="margin-bottom: 5px"/>
+          <b-card-text class="titleCards;">Nombre: {{ data.name }} </b-card-text>
+          <b-card-text class="titleCards">Especie: {{ data.species }} </b-card-text>
+          <b-card-text class="titleCards">Año de nacimiento: {{ data.yearOfBirth }} </b-card-text>
+          <b-card-text class="titleCards">Tipo de sangre:
+            <img src="../assets/Images/pure-blood.png" class="imagesBlood" v-if="data.ancestry === 'pure-blood'"/>
+            <img src="../assets/Images/half-blood.png" class="imagesBlood" v-else-if="data.ancestry === 'half-blood'"/>
+            <img src="../assets/Images/muggleborn.png" class="imagesBlood" v-else-if="data.ancestry === 'muggleborn'"/>
+            <img src="../assets/Images/squib.png" class="imagesBlood" v-else />
+          </b-card-text> 
         </b-card>
       </b-col>
     </b-row>
@@ -125,11 +141,19 @@ export default {
 
 $font-title: Harry P, Harry P
 
-.imagenes
+.imagesCharacter
     object-fit: scale-down
     width: 100%
     height: 30vh
 
-.titulos
+.titles
     font: 200% $font-title
+
+.imagesBlood
+  object-fit: scale-down
+  width: 20%
+  height: 5vh
+
+.titleCards
+  font-size: 95%
 </style>
